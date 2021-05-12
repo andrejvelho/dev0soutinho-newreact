@@ -2,15 +2,20 @@
 //import { render } from 'react-dom';
 
 function convertToHtml(virtualNode) {
-  //console.log(virtualNode);
+  
+  console.log(virtualNode);
 
   if (typeof virtualNode === 'string' || typeof virtualNode === 'number') return document.createTextNode(virtualNode);
 
   const $domElement = document.createElement(virtualNode.type);
 
-  virtualNode.props.children.forEach( (virtualChildren) => {
-    $domElement.appendChild(convertToHtml(virtualChildren));
-  });
+  if (typeof virtualNode.props.children === 'string') {
+    $domElement.appendChild(convertToHtml(virtualNode.props.children));
+  } else {
+    virtualNode.props.children.forEach( (virtualChildren) => {
+      $domElement.appendChild(convertToHtml(virtualChildren));
+    });
+  }
 
   return $domElement;
 }
@@ -28,7 +33,7 @@ function render(initialVirtualTree, $domRoot) {
 function createElement(elementType, props, ...children) {
 
   const virutalElementsProps = {
-    ...props,
+    props,
     children
   }
   
@@ -39,7 +44,6 @@ function createElement(elementType, props, ...children) {
     props: virutalElementsProps
   }
 }
-
 
 const React = {
   createElement, render
@@ -52,7 +56,6 @@ function Title(props) {
 }
 
 function App(props) {
-
   return (
     React.createElement('section', {className: "App"}, 
       React.createElement("section", null, 
@@ -60,23 +63,24 @@ function App(props) {
         React.createElement("div", null,
           React.createElement("div", null, "0"), 
           React.createElement("button", null, "Incrementar"), 
+          React.createElement("button", null, "Decrementar"),
           React.createElement("button", null, "Decrementar")
         )
       )
     )
-  );
-
+  );  
+ 
   /*
   return (
     <section>
-      <div>
-        <h1>Nosso app recria o dom virtual estilo React</h1>
-        <div>0</div>
-        <button>Incrementar</button>
-        <button>Decrementar</button>
-      </div>
+        <nav>Sou o cabeçalho</nav>
+        <h1>Filho 1</h1>
+        <h1>Filho 2</h1>
+        <div>Olá eu sou uma div</div>
+        <button>Text</button>
     </section>
-  );*/
+  );
+  */
 
 }
 
